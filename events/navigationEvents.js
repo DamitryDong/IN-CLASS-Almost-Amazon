@@ -1,5 +1,8 @@
-import { getAuthors } from '../api/authorData';
+import { favoriteAuthor, getAuthors } from '../api/authorData';
+import { showAuthors } from '../pages/authors';
 import { signOut } from '../utils/auth';
+import { getBooks, booksOnSale } from '../api/bookData';
+import { showBooks } from '../pages/books';
 
 // navigation events
 const navigationEvents = () => {
@@ -7,46 +10,30 @@ const navigationEvents = () => {
   document.querySelector('#logout-button')
     .addEventListener('click', signOut);
 
-  // TODO: BOOKS ON SALE
+  // BOOKS ON SALE
   document.querySelector('#sale-books').addEventListener('click', () => {
-    console.warn('CLICKED SALE BOOKS');
+    booksOnSale().then(showBooks);
   });
 
-  // TODO: ALL BOOKS
+  // ALL BOOKS
   document.querySelector('#all-books').addEventListener('click', () => {
-    console.warn('CLICKED ALL BOOKS');
+    getBooks().then(showBooks);
   });
 
   // STUDENTS Create an event listener for the Authors
   // 1. When a user clicks the authors link, make a call to firebase to get all authors
   // 2. Convert the response to an array because that is what the makeAuthors function is expecting
   // 3. If the array is empty because there are no authors, make sure to use the emptyAuthor function
-  document.querySelector('#authors').addEventListener('click', async (e) => {
-    e.preventDefault();
+  document.querySelector('#authors').addEventListener('click', () => {
     console.warn('CLICKED AUTHORS');
-
-    try {
-      const authors = await getAuthors();// WE HAVE TO AWAIT TO LET DATA BECOME ARRAY
-
-      if (Array.isArray(authors)) { // USED FOR DEBUGGING (you can use console log to see data returned too)
-        const authorsCard = authors.map((indivAuthor) => `
-          <div class="projCard" style="width: 18rem;">
-            <div class="card-body" id="project-card">
-              <h5 class="card-title">
-                <b>${indivAuthor.first_name} ${indivAuthor.last_name}</b>
-              </h5>
-            </div>
-          </div>
-        `).join('');
-        document.querySelector('#app').innerHTML = authorsCard;
-      } else {
-        console.error('Authors is not an array:', authors);
-      }
-    } catch (error) {
-      console.error('Failed to fetch authors:', error);
-    }
+    getAuthors().then(showAuthors);
   });
 
+  // FAVORITE AUTHORS
+  document.querySelector('#favAuthor').addEventListener('click', () => {
+    console.warn('CLICKED FAVORITE AUTHORS');
+    favoriteAuthor().then(showAuthors);
+  });
   // STRETCH: SEARCH
   document.querySelector('#search').addEventListener('keyup', (e) => {
     const searchValue = document.querySelector('#search').value.toLowerCase();

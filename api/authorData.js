@@ -29,7 +29,7 @@ const createAuthor = (newAuthor) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// GET SINGLE AUTHOR
+// GET SINGLE AUTHOR FIXME:
 const getSingleAuthor = (id) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/author/${id}.json`, {
     method: 'GET',
@@ -50,16 +50,24 @@ const deleteSingleAuthor = (id) => new Promise((resolve, reject) => {
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => { // HERE THE RESPONSE WILL SHOW DIFFERENT THINGS DEPENDING ON ERROR
-      if (!response.ok) {
-        throw new Error(`Failed to delete author: ${response.statusText}`);
-      }
-      resolve({ message: 'Author deleted successfully' });
-    })
-    .catch((error) => reject(error));
-}); // NOTICE WE DETELED THE DATA RETURN LINE (.then((data))) because delete returns no data
+    .then((response) => response.json())
+    .then((data) => resolve(data))
+    .catch(reject);
+});
+// FILTER AUTHOR FOR FAVORITE
+const favoriteAuthor = () => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/author.json?orderBy="favorite"&equalTo=true`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve(Object.values(data)))
+    .catch(reject);
+});
 
-// UPDATE AUTHOR
+// UPDATE AUTHOR FIXME:
 const updateAuthor = (id, newContent) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/author/${id}.json`, {
     method: 'PATCH',
@@ -83,4 +91,5 @@ export {
   deleteSingleAuthor,
   updateAuthor,
   getAuthorBooks,
+  favoriteAuthor,
 };

@@ -12,7 +12,7 @@ const showAuthors = (array) => {
   const btnString = '<button class="btn btn-success btn-lg mb-4" id="add-author-btn">Add An Author</button>';
 
   renderToDOM('#add-button', btnString);
-
+  /* eslint quotes: "off" */
   let domString = '';
   array.forEach((item) => {
     domString += `
@@ -20,6 +20,9 @@ const showAuthors = (array) => {
       <div class="card-body">
         <h5 class="card-title">${item.first_name} ${item.last_name}</h5>
         <h6 class="card-subtitle mb-2 text-muted">${item.email}</h6>
+        <p class='author-star'>
+          ${item.favorite ? `<span class='badge text-bg-warning'>★</span>` : ''}
+        </p>
         <hr>
         <i class="btn btn-success fas fa-eye" id="view-author-btn--${item.firebaseKey}"></i>
         <i class="fas fa-edit btn btn-info" id="update-author--${item.firebaseKey}"></i>
