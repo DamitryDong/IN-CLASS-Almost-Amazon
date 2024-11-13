@@ -15,30 +15,30 @@ const getAuthors = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// CREATE AUTHOR FIXME: MIGHT NEED FIXING
-const createAuthor = (newAuthor) => new Promise((resolve, reject) => {
+// CREATE AUTHOR
+const createAuthor = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/author.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(newAuthor) // this adds our new author in
+    body: JSON.stringify(payload),
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => resolve(data))
     .catch(reject);
 });
 
-// GET SINGLE AUTHOR FIXME:
-const getSingleAuthor = (id) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/author/${id}.json`, {
+// GET SINGLE AUTHOR
+const getSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/author/${firebaseKey}.json`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
+    }, // you technically do not need the options object for GET requests, but using it here for consistency
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => resolve(data)) // will resolve a single object
     .catch(reject);
 });
 
@@ -67,17 +67,17 @@ const favoriteAuthor = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// UPDATE AUTHOR FIXME:
-const updateAuthor = (id, newContent) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/author/${id}.json`, {
+// UPDATE AUTHOR
+const updateAuthor = (payload) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/author/${payload.firebaseKey}.json`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(newContent)
+    body: JSON.stringify(payload),
   })
     .then((response) => response.json())
-    .then((data) => resolve(data))
+    .then(resolve)
     .catch(reject);
 });
 
