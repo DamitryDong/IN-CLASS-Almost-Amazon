@@ -3,7 +3,7 @@ import { showBooks } from '../pages/books';
 import { updateAuthor, getAuthors, createAuthor } from '../api/authorData';
 import { showAuthors } from '../pages/authors';
 
-const formEvents = () => {
+const formEvents = (user) => { // added the passing of user to pass down the user gotten from firebase login
   document.querySelector('#main-container').addEventListener('submit', (e) => {
     e.preventDefault();
     // CLICK EVENT FOR SUBMITTING FORM FOR ADDING A BOOK
@@ -15,6 +15,7 @@ const formEvents = () => {
         price: document.querySelector('#price').value,
         author_id: document.querySelector('#author_id').value,
         sale: document.querySelector('#sale').checked,
+        uid: user.uid // we can get this long as the user is logged in
       };
       createBook(payload).then(({ name }) => {
         const patchPayload = { firebaseKey: name };
@@ -33,7 +34,6 @@ const formEvents = () => {
         description: document.querySelector('#description').value,
         image: document.querySelector('#image').value,
         price: document.querySelector('#price').value,
-        author_id: document.querySelector('#author_id').value,
         sale: document.querySelector('#sale').checked,
         firebaseKey,
       };
@@ -49,6 +49,8 @@ const formEvents = () => {
         first_name: document.querySelector('#first_name').value,
         last_name: document.querySelector('#last_name').value,
         email: document.querySelector('#email').value,
+        favorite: document.querySelector('#favoriteAuthor').value,
+        uid: user.uid // we can get this long as the user is logged in (copy for books)
       };
 
       createAuthor(payload).then(({ name }) => {

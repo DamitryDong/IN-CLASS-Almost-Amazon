@@ -1,10 +1,10 @@
 import client from '../utils/client';
 
 const endpoint = client.databaseURL;
-
+/* eslint-disable */
 // GET ALL AUTHORS
-const getAuthors = () => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/author.json`, {
+const getAuthors = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/author.json?orderBy="uid"&equalTo="${uid}"`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -55,15 +55,15 @@ const deleteSingleAuthor = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 // FILTER AUTHOR FOR FAVORITE
-const favoriteAuthor = () => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/author.json?orderBy="favorite"&equalTo=true`, {
+const favoriteAuthor = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/author.json?orderBy="uid"&equalTo="${uid}"`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => resolve(Object.values(data).filter((item) => item.favorite)))
     .catch(reject);
 });
 
@@ -81,8 +81,18 @@ const updateAuthor = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// TODO: GET A SINGLE AUTHOR'S BOOKS
-const getAuthorBooks = () => {};
+// GET A SINGLE AUTHOR'S BOOKS
+const getAuthorBooks = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/books.json?orderBy="author_id"&equalTo="${firebaseKey}"`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve(Object.values(data)))
+    .catch(reject);
+});
 
 export {
   getAuthors,

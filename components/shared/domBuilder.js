@@ -1,6 +1,6 @@
 import renderToDOM from '../../utils/renderToDom';
 
-// TODO: Needs to add a loop to populate the Dom and also attch dom events ID to this.
+// Needs to add a loop to populate the Dom and also attch dom events ID to this.
 const domBuilder = () => {
   const domString = `<div id="navigation"></div>
   <div id="main-container">

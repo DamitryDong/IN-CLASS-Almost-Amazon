@@ -1,20 +1,27 @@
 import client from '../utils/client';
 // API CALLS FOR BOOKS
-
+/* eslint-disable */
 const endpoint = client.databaseURL;
 
-// GET BOOKS
-const getBooks = () => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/books.json`, {
+// GET BOOKS (changed to include the uid when passing the function to load only books with the uid)
+const getBooks = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/books.json?orderBy="uid"&equalTo="${uid}"`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data))) // makes this into a array
+    .then((data) => {
+      if (data) {
+        resolve(Object.values(data));
+      } else {
+        resolve([]);
+      }
+    })
     .catch(reject);
 });
+
 // DELETE BOOK
 const deleteBook = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/books/${firebaseKey}.json`, {
@@ -55,7 +62,7 @@ const createBook = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// TODO: UPDATE BOOK
+// UPDATE BOOK
 const updateBook = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/books/${payload.firebaseKey}.json`, {
     method: 'PATCH',
@@ -69,16 +76,19 @@ const updateBook = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// FILTER BOOKS ON SALE // MAKE SURE TO ADD INDEX RULE ONTO FIREBASE RULES
-const booksOnSale = () => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/books.json?orderBy="sale"&equalTo=true`, {
+// FILTER BOOKS ON SALE , MAKE SURE TO ADD INDEX RULE ONTO FIREBASE RULES, EDITED TO USE UID TO SHOW SPECIFICS
+const booksOnSale = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/books.json?orderBy="uid"&equalTo="${uid}"`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
-    .then((data) => resolve(Object.values(data)))
+    .then((data) => {
+      const onSale = Object.values(data).filter((item) => item.sale); // object.value(data) converts the a data object into an array. 
+      resolve(onSale);                                                // the filter((item) => item.sale) is used to filter the array for only items that have "sale" = "true"
+    })
     .catch(reject);
 });
 // TODO: STRETCH...SEARCH BOOKS
