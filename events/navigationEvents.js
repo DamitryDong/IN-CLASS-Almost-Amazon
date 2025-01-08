@@ -1,7 +1,7 @@
 import { favoriteAuthor, getAuthors } from '../api/authorData';
 import { showAuthors } from '../pages/authors';
 import { signOut } from '../utils/auth';
-import { getBooks, booksOnSale } from '../api/bookData';
+import { getBooks, booksOnSale, searchBooks } from '../api/bookData';
 import { showBooks } from '../pages/books';
 
 // navigation events
@@ -37,10 +37,10 @@ const navigationEvents = (user) => {
   // STRETCH: SEARCH
   document.querySelector('#search').addEventListener('keyup', (e) => {
     const searchValue = document.querySelector('#search').value.toLowerCase();
-    console.warn(searchValue);
 
-    // WHEN THE USER PRESSES ENTER, MAKE THE API CALL AND CLEAR THE INPUT
+    // WHEN THE USER PRESSES ENTER, MAKE THE API CALL AND CLEAR THE INPUT (13 is the keycode for "enter")
     if (e.keyCode === 13) {
+      searchBooks(user.uid, searchValue).then(showBooks);
       // MAKE A CALL TO THE API TO FILTER ON THE BOOKS
       // IF THE SEARCH DOESN'T RETURN ANYTHING, SHOW THE EMPTY STORE
       // OTHERWISE SHOW THE STORE

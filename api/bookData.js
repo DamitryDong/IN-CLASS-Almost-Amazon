@@ -91,7 +91,24 @@ const booksOnSale = (uid) => new Promise((resolve, reject) => {
     })
     .catch(reject);
 });
-// TODO: STRETCH...SEARCH BOOKS
+// STRETCH...SEARCH BOOKS
+const searchBooks = (uid, searchValue) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/books.json?orderBy="uid"&equalTo="${uid}"`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        // Filter books by title
+        const filteredBooks = Object.values(data).filter(
+          (book) => book.title && book.title.includes(searchValue)
+        );
+        resolve(filteredBooks);
+      } else {
+        resolve([]);
+      }
+    })
+    .catch((error) => reject(error));
+});
+
 
 export {
   getBooks,
@@ -99,5 +116,6 @@ export {
   booksOnSale,
   deleteBook,
   getSingleBook,
-  updateBook
+  updateBook,
+  searchBooks
 };
